@@ -1,0 +1,36 @@
+* {
+	box-sizing: border-box;
+}
+body {
+	margin: 0 auto;
+	padding: 0;
+	max-width: 600px;
+	background-color: antiquewhite;
+}
+#content, #addPost {
+	background: white;
+	border-radius: 10px;
+	padding: 20px; 
+}
+.log_out {
+	width: 70px;
+	height: 30px;
+	border-radius: 10px;
+	background-color: transparent;
+	font-family: 'Lucida Sans Unicode';
+	font-size: 14px;
+	cursor: pointer;
+	border: 2px solid grey ;
+}
+.log_img {
+	max-width: 20px;
+	height: 20px;
+}
+
+.logOut {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 10px;
+	margin-top: 30px;
+}

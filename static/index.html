@@ -1,0 +1,77 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+  <title>Document</title>
+</head>
+<body>
+  <div class="logOut">
+    <button class="log_out">Log Out </button>
+    <svg xmlns="http://www.w3.org/2000/svg" class="log_img" viewBox="0 0 512 512">
+      <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+      <path
+        d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
+    </svg>
+  </div>
+  <h1>Posts</h1>
+  <div id="content"></div>
+  <div style="margin: 20px 0; text-align: center;">
+    <button id="add">add post</button>
+  </div>
+
+  <div id="addPost" style="text-align: center;" hidden>
+    <div style="display: flex; flex-direction: column; gap:10px; margin-bottom: 10px;">
+      <input id="newTitle" type="text" placeholder="title">
+      <textarea id="newContent" cols="30" rows="10" placeholder="content"></textarea>
+    </div>
+    <button id="addPostButton">Save</button>
+  </div>
+
+  <script src="login.js"></script>
+  <script>
+
+    add.addEventListener('click', ()=>{
+      addPost.hidden = false
+    })
+
+    addPostButton.addEventListener('click', async ()=>{
+      const resp = await fetch("/posts", {
+        method: "post",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: newTitle.value,
+          content: newContent.value,
+          author_id: +localStorage.id
+        })
+      })
+      const data = await resp.json()
+      location.reload()
+    })
+
+    async function getPosts() {
+      const resp = await fetch("/posts")
+      const data = await resp.json()
+      let textContent = ''
+      console.log(data.data)
+      for (let el of data.data) {
+        textContent += `
+          <div>
+            <h2>${el.title}</h2>
+            <p>${el.content}</p>
+            <div style="display: flex; justify-content: space-between;">
+              <p>${el.author.email}, ${new Date(el.created_at).toLocaleDateString()}</p>
+              <p>${el.categories.map(cat=>'#'+cat.name.replaceAll(' ','_'))}</p>
+            </div>
+          </div>
+        `
+      }
+      content.innerHTML = textContent
+    }
+    getPosts()
+  </script>
+</body>
+</html>
